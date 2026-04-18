@@ -86,7 +86,7 @@
 ### Клонирование репозитория
 
 ```bash
-git clone https://github.com/ВАШ_ЮЗЕРНЕЙМ/another-luckyblock-mod.git
+git clone https://github.com/GAZIZlikesLollipop/another-luckyblock-mod.git
 cd another-luckyblock-mod
 ```
 
