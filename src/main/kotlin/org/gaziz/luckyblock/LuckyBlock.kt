@@ -1,27 +1,48 @@
 package org.gaziz.luckyblock
 
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents
+import net.minecraft.core.BlockPos
 import net.minecraft.core.Registry
+import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
+import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
 import net.minecraft.resources.ResourceKey
-import net.minecraft.world.item.BlockItem
-import net.minecraft.world.item.CreativeModeTabs
-import net.minecraft.world.item.Item
-import net.minecraft.world.item.ItemStack
+import net.minecraft.world.entity.EntitySpawnReason
+import net.minecraft.world.item.*
 import net.minecraft.world.level.block.Block
-import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.SoundType
 import net.minecraft.world.level.block.state.BlockBehaviour
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.storage.loot.LootParams
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams
 
 class LuckyBlock(properties: Properties): Block(properties) {
     override fun getDrops(blockState: BlockState, builder: LootParams.Builder): List<ItemStack> {
-        val items = BuiltInRegistries.ITEM.toList() + listOf(ModBlocks.BLOCK)
+        val items = BuiltInRegistries.ITEM.toList()
         val item = items[(0..BuiltInRegistries.ITEM.size()).random()]
-        return listOf(ItemStack(item,1))
+        var stack = ItemStack(item,(1..(item.asItem().defaultMaxStackSize/2)).random())
+        val player = builder.getOptionalParameter(LootContextParams.THIS_ENTITY)
+        val entityData = stack.get(DataComponents.ENTITY_DATA)
+        if(entityData != null) {
+            var position = BlockPos(0,0,0)
+            stack = ItemStack(item,0)
+            val dt = builder.getOptionalParameter(LootContextParams.ORIGIN)
+            if(dt != null) {
+                position = BlockPos(dt.x.toInt(),dt.y.toInt(),dt.z.toInt())
+            } else {
+                if(player != null) {
+                    position = player.blockPosition()
+                }
+            }
+            entityData.type().spawn(
+                builder.level,
+                position,
+                EntitySpawnReason.SPAWN_ITEM_USE
+            )
+        }
+        return listOf(stack)
     }
 }
 

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "multi_bench",
+  "key": {
+    "e": "minecraft:fishing_rod",
+    "g": "minecraft:gold_ingot"
+  },
+  "pattern": [
+    "ggg",
+    "geg",
+    "ggg"
+  ],
+  "result": {
+    "count": 1,
+    "id": "another-luckyblock-mod:lucky_block"
+  }
+}
